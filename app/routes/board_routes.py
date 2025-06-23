@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort, make_response, Response
-from .routes_utilities import validate_model_by_id, create_model_inst_from_dict_with_response
+from .routes_utilities import validate_model_by_id, create_model_inst_from_dict_with_response, nested_dict
 from app.models.board import Board
 from app.models.card import Card
 from ..db import db
@@ -17,3 +17,9 @@ def boards():
 def create_board():
     request_body = request.get_json()
     return create_model_inst_from_dict_with_response(Board, request_body)
+
+# GET BOARD BY ID
+@bp.get("/<board_id>")
+def get_one_goal(board_id):
+    board = validate_model_by_id(Board, board_id)
+    return nested_dict(Board, board)

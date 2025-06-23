@@ -28,4 +28,7 @@ def create_model_inst_from_dict_with_response(cls, inst_data):
     db.session.commit()
     response = {f"{cls.__name__.lower()}": new_instance.to_dict()}
     return response, 201
+
+def nested_dict(cls, instance):
+    return {f"{cls.__name__.lower()}": instance.to_dict()}
     
