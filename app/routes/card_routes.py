@@ -33,7 +33,7 @@ def create_card(board_id):
     db.session.add(new_card)
     db.session.commit()
 
-    return new_card.to_dict(), 200
+    return new_card.to_dict(), 201
 
 #################### End point?
 # Choose between 
