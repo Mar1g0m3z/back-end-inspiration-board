@@ -62,6 +62,7 @@ def delete_card(card_id):
     return Response(status=204, mimetype="application/json")
 
 
+
 #################### End point?
 # # TODO: Move to boards blueprint?
     # Delete all boards and card
