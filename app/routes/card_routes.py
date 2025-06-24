@@ -34,8 +34,6 @@ def create_card(board_id):
     db.session.commit()
 
     return new_card.to_dict(), 200
-    # return create_model_inst_from_dict_with_response(Card, request_body)
-
 
 #################### End point?
 # Choose between 
@@ -65,6 +63,7 @@ def delete_card(card_id):
 
 
 #################### End point?
+# # TODO: Move to boards blueprint?
     # Delete all boards and card
     # "/boards/delete_all”
 @bp.delete("/delete_all")
