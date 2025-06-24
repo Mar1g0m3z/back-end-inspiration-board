@@ -29,3 +29,24 @@ def get_one_board(board_id):
 def get_cards_of_one_board(board_id):
     board = validate_model_by_id(Board, board_id)
     return board.to_dict()
+
+# CREATE CARDS FOR ONE BOARD, RETURN THE NEW CARD
+@bp.post("/<board_id>/cards")
+def create_card(board_id):
+    board = validate_model_by_id(Board, board_id)
+
+    # create Card model
+    request_body = request.get_json()
+    request_body["board_id"] = board_id
+
+    try:
+        new_card = Card.from_dict(request_body)
+    except KeyError:
+        return make_response({"details": "Invalid data"}, 400)
+
+
+    board.cards.append(new_card)
+    db.session.add(new_card)
+    db.session.commit()
+
+    return new_card.to_dict(), 201

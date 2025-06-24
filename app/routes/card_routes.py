@@ -9,31 +9,31 @@ bp = Blueprint("cards_bp", __name__, url_prefix = "/cards")
 
 
 # ===========================================
-# This route should be moved to board_routes
-# -------------------------------------------
-# Endpoint: POST /boards/<board_id>/cards
-# Purpose: Create a card under a specific board
-# # TODO: Move to boards blueprint and include board_id association logic
-# ===========================================
-@bp.post("/<board_id>/cards")
-def create_card(board_id):
-    board = validate_model_by_id(Board, board_id)
+# # This route should be moved to board_routes
+# # -------------------------------------------
+# # Endpoint: POST /boards/<board_id>/cards
+# # Purpose: Create a card under a specific board
+# # # TODO: Move to boards blueprint and include board_id association logic
+# # ===========================================
+# @bp.post("/<board_id>/cards")
+# def create_card(board_id):
+#     board = validate_model_by_id(Board, board_id)
 
-    # create Card model
-    request_body = request.get_json()
-    request_body["board_id"] = board_id
+#     # create Card model
+#     request_body = request.get_json()
+#     request_body["board_id"] = board_id
 
-    try:
-        new_card = Card.from_dict(request_body)
-    except KeyError:
-        return make_response({"details": "Invalid data"}, 400)
+#     try:
+#         new_card = Card.from_dict(request_body)
+#     except KeyError:
+#         return make_response({"details": "Invalid data"}, 400)
 
 
-    board.cards.append(new_card)
-    db.session.add(new_card)
-    db.session.commit()
+#     board.cards.append(new_card)
+#     db.session.add(new_card)
+#     db.session.commit()
 
-    return new_card.to_dict(), 201
+#     return new_card.to_dict(), 201
 
 #################### End point?
 # Choose between 
@@ -63,16 +63,16 @@ def delete_card(card_id):
 
 
 
-#################### End point?
-# # TODO: Move to boards blueprint?
-    # Delete all boards and card
-    # "/boards/delete_all”
-@bp.delete("/delete_all")
-def delete_all_boards_and_cards():
-    # Delete all cards
-    db.session.execute(delete(Card))
-    # Delete all boards
-    db.session.execute(delete(Board))
-    db.session.commit()
+# #################### End point?
+# # # TODO: Move to boards blueprint?
+#     # Delete all boards and card
+#     # "/boards/delete_all”
+# @bp.delete("/delete_all")
+# def delete_all_boards_and_cards():
+#     # Delete all cards
+#     db.session.execute(delete(Card))
+#     # Delete all boards
+#     db.session.execute(delete(Board))
+#     db.session.commit()
 
-    return Response(status=204, mimetype="application/json")
+#     return Response(status=204, mimetype="application/json")
