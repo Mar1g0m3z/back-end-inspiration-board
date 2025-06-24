@@ -20,6 +20,6 @@ def create_board():
 
 # GET BOARD BY ID
 @bp.get("/<board_id>")
-def get_one_goal(board_id):
+def get_one_boardl(board_id):
     board = validate_model_by_id(Board, board_id)
     return nested_dict(Board, board)
