@@ -22,7 +22,7 @@ class Card(db.Model):
 
     @classmethod
     def from_dict(cls, card_data):
-        
+        likes_count = 0
         return cls(message=card_data["message"],
-                   likes_count=card_data["likes_count"],
+                   likes_count=likes_count,
                    board_id=card_data["board_id"])
