@@ -232,3 +232,13 @@ def test_create_card_with_extra_field(client, one_board):
     assert response_body["message"] == "Valid message"
     assert response_body["likes_count"] == 0  # hardcoded in from_dict
     assert "extra_field" not in response_body
+
+def test_create_duplicate_boards_allowed(client):
+    board_data = {"title": "Duplicate Board", "owner": "Same Owner"}
+
+    response1 = client.post("/boards", json=board_data)
+    response2 = client.post("/boards", json=board_data)
+
+    assert response1.status_code == 201
+    assert response2.status_code == 201
+    assert response1.get_json()["board"]["id"] != response2.get_json()["board"]["id"]
