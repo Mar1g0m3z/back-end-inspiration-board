@@ -109,7 +109,7 @@ def test_get_cards_for_board_with_cards(client, one_board_with_cards):
     assert "Keep learning Python" in messages
     assert "Understand Linked lists" in messages
 
-def test_create_card_for_existing_board(client, app, one_board):
+def test_create_card_for_existing_board(client, one_board):
     # Arrange
     request_data = {
         "message": "Buy some cooking books",
@@ -161,3 +161,10 @@ def test_create_board_missing_both_fields(client):
 
     assert response.status_code == 400
     assert response_body == {"details": "Invalid data"}
+
+def test_get_cards_for_board_not_found(client):
+    response = client.get("/boards/999/cards")  # ID 999 doesn't exist
+    response_body = response.get_json()
+
+    assert response.status_code == 404
+    assert response_body == {"message": "Board with id <999> is not found."}
