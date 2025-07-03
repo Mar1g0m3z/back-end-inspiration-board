@@ -172,7 +172,7 @@ def test_get_cards_for_board_not_found(client):
 
     assert response.status_code == 404
     assert response_body == {"message": "Board with id <999> is not found."}
-# add drom here
+
 
 def test_create_card_missing_message(client, one_board):
     response = client.post("/boards/1/cards", json={})
@@ -180,3 +180,8 @@ def test_create_card_missing_message(client, one_board):
 
     assert response.status_code == 400
     assert response_body == {"details": "Invalid data"}
+
+def test_get_cards_invalid_board_id_format(client):
+    response = client.get("/boards/abc/cards")
+    assert response.status_code == 400
+    assert response.get_json() == {"message": "Board id <abc> is invalid."}
