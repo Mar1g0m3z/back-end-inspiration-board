@@ -50,3 +50,18 @@ def test_get_all_boards_three_saved_boards(client, three_boards):
             and returned["cards"] == []
             for returned in response_body
         )
+
+def test_create_board(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "My New Board",
+        "owner": "Alex"
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert "board" in response_body
+    assert response_body["board"]["title"] == "My New Board"
+    assert response_body["board"]["owner"] == "Alex"
+    assert response_body["board"]["cards"] == []
