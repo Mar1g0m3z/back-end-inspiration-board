@@ -44,3 +44,4 @@ def create_card(board_id):
     db.session.commit()
 
     return new_card.to_dict(), 201
+

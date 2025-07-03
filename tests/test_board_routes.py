@@ -134,3 +134,30 @@ def test_create_card_for_existing_board(client, app, one_board):
     assert db_card.message == request_data["message"]
     assert db_card.likes_count == 0
     assert db_card.board_id == 1
+
+def test_create_board_missing_title(client):
+    # Missing title
+    request_data = {"owner": "Alex"}
+    response = client.post("/boards", json=request_data)
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert response_body == {"details": "Invalid data"}
+
+def test_create_board_missing_owner(client):
+    # Missing owner
+    request_data = {"title": "Title only"}
+    response = client.post("/boards", json=request_data)
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert response_body == {"details": "Invalid data"}
+
+def test_create_board_missing_both_fields(client):
+    # Missing both
+    request_data = {}
+    response = client.post("/boards", json=request_data)
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert response_body == {"details": "Invalid data"}
