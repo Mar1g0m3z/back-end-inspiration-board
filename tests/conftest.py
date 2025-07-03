@@ -38,7 +38,7 @@ def client(app):
 
 # This fixture gets called in every test that
 # references "one_board"
-# This fixture creates a task and saves it in the database
+# This fixture creates a board and saves it in the database
 @pytest.fixture
 def one_board(app):
     new_board = Board(title="Learn how to cook", 
@@ -49,7 +49,7 @@ def one_board(app):
 
 # This fixture gets called in every test that
 # references "three_boards"
-# This fixture creates three tasks and saves
+# This fixture creates three boards and saves
 # them in the database
 @pytest.fixture
 def three_boards(app):
@@ -61,4 +61,17 @@ def three_boards(app):
         Board(title="Find a dream job", 
             owner="Sasha")
     ])
+    db.session.commit()
+
+# This fixture gets called in every test that
+# references "one_board_with_cards"
+# This fixture creates one board and two cards for it and saves
+# them in the database
+@pytest.fixture
+def one_board_with_cards(app):
+    board = Board(title="Learn how to code", owner="Sasha")
+    card_1 = Card(message="Keep learning Python", likes_count=2, board=board)
+    card_2 = Card(message="Understand Linked lists", likes_count=0, board=board)
+
+    db.session.add_all([board, card_1, card_2])
     db.session.commit()
