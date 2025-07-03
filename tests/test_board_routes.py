@@ -79,3 +79,30 @@ def test_create_board(client, app):
     assert db_board.title == request_data["title"]
     assert db_board.owner == request_data["owner"]
     assert db_board.cards == []
+
+def test_get_cards_for_board_no_cards(client, one_board):
+    # Act
+    response = client.get("/boards/1/cards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == {
+        "id": 1,
+        "title": "Learn how to cook",
+        "owner": "Michael",
+        "cards": []
+    }
+
+def test_get_cards_for_board_with_cards(client, one_board_with_cards):
+    response = client.get("/boards/1/cards")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body["id"] == 1
+    assert response_body["title"] == "Learn how to code"
+    assert response_body["owner"] == "Sasha"
+    assert len(response_body["cards"]) == 2
+    messages = [card["message"] for card in response_body["cards"]]
+    assert "Keep learning Python" in messages
+    assert "Understand Linked lists" in messages
