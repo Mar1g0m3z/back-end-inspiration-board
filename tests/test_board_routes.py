@@ -4,6 +4,8 @@ from app.models.card import Card
 from app.db import db
 import pytest
 
+# NOMINAL CASES
+
 def test_get_all_boards_no_saved_boards(client):
     # Act
     response = client.get("/boards")
@@ -135,6 +137,8 @@ def test_create_card_for_existing_board(client, one_board):
     assert db_card.likes_count == 0
     assert db_card.board_id == 1
 
+# EDGE CASES
+
 def test_create_board_missing_title(client):
     # Missing title
     request_data = {"owner": "Alex"}
@@ -168,3 +172,11 @@ def test_get_cards_for_board_not_found(client):
 
     assert response.status_code == 404
     assert response_body == {"message": "Board with id <999> is not found."}
+# add drom here
+
+def test_create_card_missing_message(client, one_board):
+    response = client.post("/boards/1/cards", json={})
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert response_body == {"details": "Invalid data"}
