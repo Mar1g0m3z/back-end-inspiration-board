@@ -1,4 +1,6 @@
 from app.models.board import Board
+from app.models.card import Card
+
 from app.db import db
 import pytest
 
@@ -106,3 +108,29 @@ def test_get_cards_for_board_with_cards(client, one_board_with_cards):
     messages = [card["message"] for card in response_body["cards"]]
     assert "Keep learning Python" in messages
     assert "Understand Linked lists" in messages
+
+def test_create_card_for_existing_board(client, app, one_board):
+    # Arrange
+    request_data = {
+        "message": "Buy some cooking books",
+    }
+
+    # Act
+    response = client.post("/boards/1/cards", json=request_data)
+    response_body = response.get_json()
+
+    # Assert: response
+    assert response.status_code == 201
+    assert response_body["message"] == request_data["message"]
+    assert response_body["likes_count"] == 0
+    assert response_body["board_id"] == 1
+    assert "id" in response_body
+
+    # Assert: database
+    query = db.select(Card).where(Card.id == response_body["id"])
+    db_card = db.session.scalar(query)
+
+    assert db_card is not None
+    assert db_card.message == request_data["message"]
+    assert db_card.likes_count == 0
+    assert db_card.board_id == 1
