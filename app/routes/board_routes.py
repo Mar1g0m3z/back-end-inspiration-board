@@ -12,7 +12,7 @@ def boards():
     boards = db.session.scalars(db.select(Board).order_by(Board.title))
     return [board.to_dict() for board in boards]
 
-# POST ONE BOARD, RETURN {"GOAL": {GOAL DICTIONARY}}
+# POST ONE BOARD, RETURN {"BOARD": {BOARD DICTIONARY}}
 @bp.post("")
 def create_board():
     request_body = request.get_json()
@@ -37,7 +37,6 @@ def create_card(board_id):
         new_card = Card.from_dict(request_body)
     except KeyError:
         return make_response({"details": "Invalid data"}, 400)
-
 
     board.cards.append(new_card)
     db.session.add(new_card)
