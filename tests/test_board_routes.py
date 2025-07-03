@@ -185,3 +185,25 @@ def test_get_cards_invalid_board_id_format(client):
     response = client.get("/boards/abc/cards")
     assert response.status_code == 400
     assert response.get_json() == {"message": "Board id <abc> is invalid."}
+
+# this wouldn't work on front-end since it's blocking long inputs
+def test_create_board_with_long_title_and_owner(client):
+    long_title = "T" * 1000
+    long_owner = "O" * 1000
+
+    response = client.post("/boards", json={"title": long_title, "owner": long_owner})
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body["board"]["title"] == long_title
+    assert response_body["board"]["owner"] == long_owner
+
+# this wouldn't work on front-end since it's blocking long inputs
+def test_create_card_with_long_message(client, one_board):
+    long_message = "M" * 1000
+
+    response = client.post("/boards/1/cards", json={"message": long_message})
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body["message"] == long_message
