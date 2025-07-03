@@ -208,7 +208,7 @@ def test_create_card_with_long_message(client, one_board):
     assert response.status_code == 201
     assert response_body["message"] == long_message
 
-def test_create_board_with_extra_fields(client):
+def test_create_board_with_extra_field(client):
     response = client.post("/boards", json={
         "title": "Extra Fields Board",
         "owner": "Tester",
@@ -219,3 +219,16 @@ def test_create_board_with_extra_fields(client):
     assert response.status_code == 201
     assert response_body["board"]["title"] == "Extra Fields Board"
     assert "extra_field" not in response_body["board"]
+
+def test_create_card_with_extra_field(client, one_board):
+    response = client.post("/boards/1/cards", json={
+        "message": "Valid message",
+        "likes_count": 100,
+        "extra_field": "ignore me"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body["message"] == "Valid message"
+    assert response_body["likes_count"] == 0  # hardcoded in from_dict
+    assert "extra_field" not in response_body
