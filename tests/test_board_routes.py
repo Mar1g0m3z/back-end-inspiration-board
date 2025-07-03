@@ -51,17 +51,31 @@ def test_get_all_boards_three_saved_boards(client, three_boards):
             for returned in response_body
         )
 
-def test_create_board(client):
-    # Act
-    response = client.post("/boards", json={
+def test_create_board(client, app):
+    # Arrange
+    request_data = {
         "title": "My New Board",
         "owner": "Alex"
-    })
+    }
+
+    # Act
+    response = client.post("/boards", json=request_data)
     response_body = response.get_json()
 
-    # Assert
+    # Assert: response
     assert response.status_code == 201
     assert "board" in response_body
-    assert response_body["board"]["title"] == "My New Board"
-    assert response_body["board"]["owner"] == "Alex"
-    assert response_body["board"]["cards"] == []
+
+    board = response_body["board"]
+    assert board["title"] == request_data["title"]
+    assert board["owner"] == request_data["owner"]
+    assert board["cards"] == []
+    assert "id" in board and isinstance(board["id"], int)
+
+    # Assert: database
+    query = db.select(Board).where(Board.id == board["id"])
+    db_board = db.session.scalar(query)
+    assert db_board is not None
+    assert db_board.title == request_data["title"]
+    assert db_board.owner == request_data["owner"]
+    assert db_board.cards == []
