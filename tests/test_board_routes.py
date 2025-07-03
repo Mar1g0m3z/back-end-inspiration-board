@@ -207,3 +207,15 @@ def test_create_card_with_long_message(client, one_board):
 
     assert response.status_code == 201
     assert response_body["message"] == long_message
+
+def test_create_board_with_extra_fields(client):
+    response = client.post("/boards", json={
+        "title": "Extra Fields Board",
+        "owner": "Tester",
+        "extra_field": "I should be ignored"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body["board"]["title"] == "Extra Fields Board"
+    assert "extra_field" not in response_body["board"]
